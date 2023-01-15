@@ -1,8 +1,8 @@
 import UIKit
 
-class AlerPresenter: AlertPresenterProtocol {
+final class AlerPresenter: AlertPresenterProtocol {
     
-    weak var delegate: AlertPresenterDelegate?
+    private weak var delegate: AlertPresenterDelegate?
     
     init(delegate: AlertPresenterDelegate) {
         self.delegate = delegate

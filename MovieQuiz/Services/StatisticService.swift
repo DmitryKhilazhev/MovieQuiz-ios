@@ -47,7 +47,7 @@ final class StatisticServiceImplementation: StatisticService {
         if gamesCount == 0 {  // для 1-й игры точность равна точности первой игры
             totalAccuracy = (Double(currentGame.correct) / Double(currentGame.total))
         } else {            // для остальных игр точность среднее ариф. = (общее+текущее)/2
-            totalAccuracy = (totalAccuracy + (Double(currentGame.correct) / Double(currentGame.total))) / 2.0
+            totalAccuracy = (Double(totalAccuracy) * Double(gamesCount) + Double(currentGame.correct) / Double(currentGame.total)) / Double(gamesCount + 1)
         }
         gamesCount += 1
     }
