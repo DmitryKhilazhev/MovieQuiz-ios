@@ -6,16 +6,28 @@
 //
 
 import Foundation
+
+/// Протокол, чтобы можно было тестировать 
+protocol NetworkRouting {
+    func fetch(url: URL, handler: @escaping (Result<Data, Error>) -> Void)
+}
+
+
+
 /// Отвечает за загрузку данных по URL
-struct NetworkClient {
+struct NetworkClient: NetworkRouting {
 
     private enum NetworkError: Error {
         case codeError
     }
     
-    /* функция, которая будет загружать что-то по заранее заданному URL.
-    функция отдаёт результат асинхронно через замыкание handler
-    вернётся либо «успех» с данными типа Data, либо ошибка */
+
+    ///Функция, которая будет загружать что-то по заранее заданному URL.
+    ///Функция отдаёт результат асинхронно через замыкание handler
+    ///и вернётся либо «успех» с данными типа Data, либо ошибка
+    /// - Parametrs:
+    /// - url: Заранее заданный URL
+    /// - handler: Обрабатывает ответ
     func fetch(url: URL, handler: @escaping (Result<Data, Error>) -> Void) {
         let request = URLRequest(url: url)
         

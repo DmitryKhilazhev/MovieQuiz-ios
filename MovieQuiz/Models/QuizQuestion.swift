@@ -1,6 +1,6 @@
 import Foundation
-
-struct QuizQuestion {     // Структура для Вопроса
+/// Структура для Вопроса
+struct QuizQuestion {
   let image: Data
   let text: String
   let correctAnswer: Bool

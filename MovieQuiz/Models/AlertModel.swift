@@ -1,6 +1,7 @@
 import Foundation
 
-struct AlertModel {     // Структура для Алерта
+/// Структура для Алерта
+struct AlertModel {
   let title: String
   let message: String
   let buttonText: String
