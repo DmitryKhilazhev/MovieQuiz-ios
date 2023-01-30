@@ -1,15 +1,17 @@
 import UIKit
 
 final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, AlertPresenterDelegate {
+    
+    func didReceiveNextQuestion(question: QuizQuestion?) {
+        presenter.didRecieveNextQuestion(question: question)
+    }
 
     @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
     @IBAction private func noButtonClicked(_ sender: Any) {
-        presenter.currentQuestion = currentQuestion
         presenter.noButtonClicked()
     }
     @IBOutlet private weak var textLabel: UILabel!
     @IBAction private func yesButtonClicked(_ sender: Any) {
-        presenter.currentQuestion = currentQuestion
         presenter.yesButtonClicked()
     }
     @IBOutlet private weak var counterLabel: UILabel!
@@ -21,7 +23,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
 //    private let questionsAmount: Int = 10
     private var questionFactory: QuestionFactoryProtocol?
     private var alertPresenter: AlertPresenterProtocol?
-    private var currentQuestion: QuizQuestion?
+//    private var currentQuestion: QuizQuestion?
     private var statisticService: StatisticService?
     
     private func showLoadingIndicator() {
@@ -61,7 +63,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
 //            questionNumber: "\(currentQuestionIndex + 1)/\(questionsAmount)")
 //    }
 
-    private func show(quiz step: QuizStepViewModel) {   // Показываю вопрос на экране
+    func show(quiz step: QuizStepViewModel) {   // Показываю вопрос на экране
         counterLabel.text = step.questionNumber
         imageView.image = step.image
         textLabel.text = step.question
@@ -77,10 +79,12 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         } else {
             imageView.layer.borderColor = UIColor.ypRed.cgColor
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
-            guard let self = self else {return}
-            self.imageView.layer.borderWidth = 0
-            self.showNextQuestionOrResults()
+         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+             guard let self = self else { return }
+             self.presenter.correctAnswers = self.correctAnswers
+             self.presenter.questionFactory = self.questionFactory
+             self.presenter.showNextQuestionOrResults()
+             self.imageView.layer.borderWidth = 0
         }
     }
     
@@ -116,23 +120,24 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
 //      }
 //    }
 
-    private func showNextQuestionOrResults() {
-        if presenter.isLastQuestion() {
-            let text = "Вы ответили на \(correctAnswers) из 10, попробуйте еще раз!"
-
-            let viewModel = QuizResultsViewModel(
-                title: "Этот раунд окончен!",
-                text: text,
-                buttonText: "Сыграть ещё раз")
-            show(quiz: viewModel)
-        } else {
-            presenter.switchToNextQuestion()
-            questionFactory?.requestNextQuestion()
-        }
-    }
+    
+//    private func showNextQuestionOrResults() {
+//        if presenter.isLastQuestion() {
+//            let text = "Вы ответили на \(correctAnswers) из 10, попробуйте еще раз!"
+//
+//            let viewModel = QuizResultsViewModel(
+//                title: "Этот раунд окончен!",
+//                text: text,
+//                buttonText: "Сыграть ещё раз")
+//            show(quiz: viewModel)
+//        } else {
+//            presenter.switchToNextQuestion()
+//            questionFactory?.requestNextQuestion()
+//        }
+//    }
     
     
-    private func show(quiz result: QuizResultsViewModel) {
+    func show(quiz result: QuizResultsViewModel) {
         var message = result.text
         if let statisticService = statisticService {
             statisticService.store(correct: correctAnswers, total: presenter.questionsAmount)
@@ -172,17 +177,17 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     }
     
     // MARK: - QuestionFactoryDelegate
-    func didReceiveNextQuestion(question: QuizQuestion?) {
-        guard let question = question else {
-            return
-        }
-        
-        currentQuestion = question
-        let viewModel = presenter.convert(model: question)
-        DispatchQueue.main.async { [weak self] in
-            self?.show(quiz: viewModel)
-        }
-    }
+//    func didReceiveNextQuestion(question: QuizQuestion?) {
+//        guard let question = question else {
+//            return
+//        }
+//        
+//        currentQuestion = question
+//        let viewModel = presenter.convert(model: question)
+//        DispatchQueue.main.async { [weak self] in
+//            self?.show(quiz: viewModel)
+//        }
+//    }
     
     override func viewDidLoad() { //Показал стартовый вопрос
         super.viewDidLoad()
