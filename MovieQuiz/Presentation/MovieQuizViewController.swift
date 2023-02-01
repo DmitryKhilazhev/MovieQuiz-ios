@@ -1,7 +1,6 @@
 import UIKit
 
 final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, AlertPresenterDelegate {
-    
     func didReceiveNextQuestion(question: QuizQuestion?) {
         presenter.didRecieveNextQuestion(question: question)
     }
@@ -79,12 +78,10 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         } else {
             imageView.layer.borderColor = UIColor.ypRed.cgColor
         }
-         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
-             guard let self = self else { return }
-             self.presenter.correctAnswers = self.correctAnswers
-             self.presenter.questionFactory = self.questionFactory
-             self.presenter.showNextQuestionOrResults()
-             self.imageView.layer.borderWidth = 0
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+            guard let self = self else {return}
+            self.imageView.layer.borderWidth = 0
+            self.showNextQuestionOrResults()
         }
     }
     
@@ -120,24 +117,23 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
 //      }
 //    }
 
+    private func showNextQuestionOrResults() {
+        if presenter.isLastQuestion() {
+            let text = "Вы ответили на \(correctAnswers) из 10, попробуйте еще раз!"
+
+            let viewModel = QuizResultsViewModel(
+                title: "Этот раунд окончен!",
+                text: text,
+                buttonText: "Сыграть ещё раз")
+            show(quiz: viewModel)
+        } else {
+            presenter.switchToNextQuestion()
+            questionFactory?.requestNextQuestion()
+        }
+    }
     
-//    private func showNextQuestionOrResults() {
-//        if presenter.isLastQuestion() {
-//            let text = "Вы ответили на \(correctAnswers) из 10, попробуйте еще раз!"
-//
-//            let viewModel = QuizResultsViewModel(
-//                title: "Этот раунд окончен!",
-//                text: text,
-//                buttonText: "Сыграть ещё раз")
-//            show(quiz: viewModel)
-//        } else {
-//            presenter.switchToNextQuestion()
-//            questionFactory?.requestNextQuestion()
-//        }
-//    }
     
-    
-    func show(quiz result: QuizResultsViewModel) {
+    private func show(quiz result: QuizResultsViewModel) {
         var message = result.text
         if let statisticService = statisticService {
             statisticService.store(correct: correctAnswers, total: presenter.questionsAmount)
@@ -188,6 +184,9 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
 //            self?.show(quiz: viewModel)
 //        }
 //    }
+    func didRecieveNextQuestion(question: QuizQuestion?) {
+        presenter.didRecieveNextQuestion(question: question)
+    }
     
     override func viewDidLoad() { //Показал стартовый вопрос
         super.viewDidLoad()

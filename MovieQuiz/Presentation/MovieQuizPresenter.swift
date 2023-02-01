@@ -44,7 +44,7 @@ final class MovieQuizPresenter {
         didAnswer(isYes: false)
     }
 
-    private func didAnswer(isYes: Bool) {
+    func didAnswer(isYes: Bool) {
         guard let currentQuestion = currentQuestion else {
             return
         }
