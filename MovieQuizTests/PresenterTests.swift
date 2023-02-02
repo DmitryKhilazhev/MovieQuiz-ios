@@ -8,7 +8,7 @@
 import XCTest
 @testable import MovieQuiz
 
-final class MovieQuizViewControllerProtocolMock: MovieQuizProtocol {
+final class MovieQuizViewControllerProtocolMock: MovieQuizViewProtocol {
     func show(quiz step: QuizStepViewModel) {
     
     }

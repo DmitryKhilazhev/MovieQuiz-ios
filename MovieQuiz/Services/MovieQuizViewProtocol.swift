@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol MovieQuizProtocol: AnyObject {
+protocol MovieQuizViewProtocol: AnyObject {
     func show(quiz step: QuizStepViewModel)
     func show(quiz result: QuizResultsViewModel)
     
