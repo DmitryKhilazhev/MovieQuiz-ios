@@ -1,6 +1,6 @@
 import UIKit
 
-final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, AlertPresenterDelegate, MovieQuizViewControllerProtocol {
+final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, AlertPresenterDelegate, MovieQuizProtocol {
     
     func didReceiveNextQuestion(question: QuizQuestion?) {
         presenter.didReceiveNextQuestion(question: question)
@@ -28,12 +28,12 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
 
      // MARK: - Lifecycle
 
-     override func viewDidLoad() { //Показал стартовый вопрос
+     override func viewDidLoad() { 
          super.viewDidLoad()
 
          presenter = MovieQuizPresenter(viewController: self)
 
-         imageView.layer.cornerRadius = 20 // радиус скругления углов рамки
+         imageView.layer.cornerRadius = 20
      }
 
 
@@ -72,8 +72,8 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
      }
 
      func showLoadingIndicator() {
-         activityIndicator.isHidden = false // говорим, что индикатор загрузки не скрыт
-         activityIndicator.startAnimating() // включаем анимацию
+         activityIndicator.isHidden = false
+         activityIndicator.startAnimating()
      }
 
      func hideLoadingIndicator() {
